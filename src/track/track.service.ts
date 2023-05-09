@@ -25,14 +25,14 @@ export class TrackService {
     }
 
     async search (query: string) {
-        const tracks = await this.prisma.track.findMany({where: {name: {equals: query, mode: 'insensitive'}}})
+        const tracks = await this.prisma.track.findMany({where: {name: {contains: query, mode: 'insensitive', }}})
         return tracks
     }
 
     async getOne (id: string) {
-        const track = await this.prisma.track.findUnique({where: {id}})
-        const comments = await this.prisma.comments.findMany({where: {track_id: id}})
-        return {...track, comments}
+        const track = await this.prisma.track.findUnique({where: {id}, include: {comments: true}})
+        // const comments = await this.prisma.comments.findMany({where: {track_id: id}})
+        return track
     }
 
     async delete (id: string) {

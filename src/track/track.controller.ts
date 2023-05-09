@@ -31,10 +31,8 @@ export class TrackController {
         return tracks
     }
 
-    @Get()
-    search (
-        @Query('query') query: string, 
-        ) {
+    @Get('/search')
+    search ( @Query('query') query: string, ) {
         const tracks = this.trackService.search(query)
         return tracks
     }
