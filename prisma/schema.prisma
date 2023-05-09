@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model comments {
+  id       String @id @default(uuid()) @db.Uuid
+  username String
+  text     String
+  track_id String @db.Uuid
+  track    track? @relation(fields: [track_id], references: [id])
+
+  @@map("comments")
+}
+
+model track {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String     @db.Char(255)
+  artist      String     @unique @db.Char(255)
+  text        String     @db.Char(255)
+  listens     Int        @db.Integer
+  picture     String
+  audio       String
+  comments_id String[]   @db.Uuid
+  comments    comments[]
+  album_id    String?    @db.Uuid
+  album       album?     @relation(fields: [album_id], references: [id])
+
+  @@map("track")
+}
+
+model album {
+  id      String  @id @default(uuid()) @db.Uuid
+  name    String
+  author  String
+  picture String
+  tracks  track[]
+
+  @@map("album")
+}
